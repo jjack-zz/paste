@@ -1,0 +1,80 @@
+<html>
+<head>
+<script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="scripts/jquery.beautyOfCode.js"></script>
+<script type="text/javascript" src="scripts/jquery-json.js"></script>
+<script type="text/javascript" src="scripts/functions.js"></script>
+<script type="text/javascript" src="scripts/sha1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // pre-hide everything
+        $("#paste_new").hide();
+        $("#paste_view").hide();
+        $("#paste_url").hide();
+     
+        var paste = get_paste();
+
+        if ( paste == "" ) {
+            // it's gonna be a new paste 
+            $("#paste_new").show();
+            
+        } else {
+            // it's gonna be an existing paste
+            $("#paste_view").show();
+            $("#paste_url").show();
+
+            // grab the paste  
+            $.ajax({
+                url: "http://paste.pleasework.net/couchdb/pastes/" + paste,
+                dataType: "json",
+                success: function(data) {
+                   beautify(data);
+                }
+             });
+
+        }
+    });
+</script>
+</head>
+
+<body>
+
+<div id="header"><h1>paste some stuff</h1></div>
+
+<div id="refresh"><a href="http://paste.pleasework.net/">New / Back</a></div>
+<br>
+<div id="paste_url">&nbsp;</div>
+
+<div id="paste_new">
+<form id="paste_form">
+Language:
+<select id="new_language">
+  <option value="bash">bash</option>
+  <option value="cpp">c/c++</option>
+  <option value="c-sharp">c#</option>
+  <option value="css">css</option>
+  <option value="diff">diff</option>
+  <option value="erlang">erlang</option>
+  <option value="javascript">javascript</option>
+  <option value="perl">perl</option>
+  <option value="php">php</option>
+  <option value="plain">plain</option>
+  <option value="python">python</option>
+  <option value="ruby">ruby</option>
+  <option value="sql">sql</option>
+  <option value="xml">xml</option>
+</select>
+<br>
+<textarea id="new_text" rows="35" cols="100"></textarea><br>
+<input type="submit" onclick="add_paste(); return false;" value="Submit">
+</form>
+
+</div>
+
+<div id="paste_view">
+<div id="language"></div>
+<pre class="code"><code id="paste"></code></pre></td>
+</div>
+
+</body>
+</html>
